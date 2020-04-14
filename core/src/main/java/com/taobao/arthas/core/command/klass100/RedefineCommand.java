@@ -10,21 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.objectweb.asm.ClassReader;
-
 import com.alibaba.arthas.deps.org.slf4j.Logger;
 import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
 import com.taobao.arthas.core.command.Constants;
-import com.taobao.arthas.core.command.logger.LoggerCommand;
 import com.taobao.arthas.core.shell.cli.Completion;
 import com.taobao.arthas.core.shell.cli.CompletionUtils;
 import com.taobao.arthas.core.shell.command.AnnotatedCommand;
 import com.taobao.arthas.core.shell.command.CommandProcess;
-import com.taobao.middleware.cli.annotations.Argument;
-import com.taobao.middleware.cli.annotations.Description;
-import com.taobao.middleware.cli.annotations.Name;
-import com.taobao.middleware.cli.annotations.Option;
-import com.taobao.middleware.cli.annotations.Summary;
+import com.taobao.middleware.cli.annotations.*;
+import org.objectweb.asm.ClassReader;
 
 /**
  * Redefine Classes.
@@ -33,7 +27,7 @@ import com.taobao.middleware.cli.annotations.Summary;
  * @see java.lang.instrument.Instrumentation#redefineClasses(ClassDefinition...)
  */
 @Name("redefine")
-@Summary("Redefine classes. @see Instrumentation#redefineClasses(ClassDefinition...)")
+@Summary("Redefine classes. @see Instrumentation#redefineClasses(ClassDefinition...)|注意: Redefine后的类 reset/shutdown无法还原")
 @Description(Constants.EXAMPLE +
                 "  redefine /tmp/Test.class\n" +
                 "  redefine -c 327a647b /tmp/Test.class /tmp/Test\\$Inner.class \n" +
