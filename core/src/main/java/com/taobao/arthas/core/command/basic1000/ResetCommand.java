@@ -1,20 +1,16 @@
 package com.taobao.arthas.core.command.basic1000;
 
+import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
+
 import com.taobao.arthas.core.advisor.Enhancer;
 import com.taobao.arthas.core.command.Constants;
 import com.taobao.arthas.core.shell.command.AnnotatedCommand;
 import com.taobao.arthas.core.shell.command.CommandProcess;
-import com.taobao.arthas.core.util.matcher.Matcher;
 import com.taobao.arthas.core.util.SearchUtils;
 import com.taobao.arthas.core.util.affect.EnhancerAffect;
-import com.taobao.middleware.cli.annotations.Argument;
-import com.taobao.middleware.cli.annotations.Description;
-import com.taobao.middleware.cli.annotations.Name;
-import com.taobao.middleware.cli.annotations.Option;
-import com.taobao.middleware.cli.annotations.Summary;
-
-import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
+import com.taobao.arthas.core.util.matcher.Matcher;
+import com.taobao.middleware.cli.annotations.*;
 
 /**
  * 恢复所有增强类<br/>
@@ -22,7 +18,7 @@ import java.lang.instrument.UnmodifiableClassException;
  * @author vlinux on 15/5/29.
  */
 @Name("reset")
-@Summary("Reset all the enhanced classes")
+@Summary("注意: Redefine后的类 reset/shutdown无法还原 |  Reset all the enhanced classes")
 @Description(Constants.EXAMPLE +
         "  reset\n" +
         "  reset *List\n" +

@@ -125,7 +125,7 @@ public class ArthasBootstrap {
         Method throwInvoke = adviceWeaverClass.getMethod(AdviceWeaver.THROW_INVOKE, int.class, String.class, String.class, String.class, int.class);
         Spy.init(AdviceWeaver.class.getClassLoader(), onBefore, onReturn, onThrows, beforeInvoke, afterInvoke, throwInvoke);
     }
-    
+
     private void initArthasEnvironment(String args) throws IOException {
         if (arthasEnvironment == null) {
             arthasEnvironment = new ArthasEnvironment();
@@ -389,5 +389,13 @@ public class ArthasBootstrap {
 
     private Logger logger() {
         return LoggerFactory.getLogger(this.getClass());
+    }
+
+    public Instrumentation getInstrumentation() {
+        return instrumentation;
+    }
+
+    public ShellServer getShellServer() {
+        return shellServer;
     }
 }

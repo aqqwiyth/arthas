@@ -27,7 +27,7 @@ import org.objectweb.asm.ClassReader;
  * @see java.lang.instrument.Instrumentation#redefineClasses(ClassDefinition...)
  */
 @Name("redefine")
-@Summary("Redefine classes. @see Instrumentation#redefineClasses(ClassDefinition...)|注意: Redefine后的类 reset/shutdown无法还原")
+@Summary("注意: Redefine后的类 reset/shutdown无法还原|  Redefine classes. @see Instrumentation#redefineClasses(ClassDefinition...)|")
 @Description(Constants.EXAMPLE +
                 "  redefine /tmp/Test.class\n" +
                 "  redefine -c 327a647b /tmp/Test.class /tmp/Test\\$Inner.class \n" +

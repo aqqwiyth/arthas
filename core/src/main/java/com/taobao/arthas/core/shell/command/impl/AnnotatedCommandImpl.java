@@ -1,5 +1,8 @@
 package com.taobao.arthas.core.shell.command.impl;
 
+import java.util.Collections;
+
+import com.taobao.arthas.core.command.basic1000.ShutdownCommand;
 import com.taobao.arthas.core.shell.cli.Completion;
 import com.taobao.arthas.core.shell.command.AnnotatedCommand;
 import com.taobao.arthas.core.shell.command.Command;
@@ -9,8 +12,6 @@ import com.taobao.arthas.core.util.UserStatUtil;
 import com.taobao.middleware.cli.CLI;
 import com.taobao.middleware.cli.Option;
 import com.taobao.middleware.cli.annotations.CLIConfigurator;
-
-import java.util.Collections;
 
 /**
  * @author beiwei30 on 10/11/2016.
@@ -79,6 +80,10 @@ public class AnnotatedCommandImpl extends Command {
             return;
         }
         CLIConfigurator.inject(process.commandLine(), instance);
+        /**
+         * refresh auto shutdown time
+         */
+        ShutdownCommand.active();
         instance.process(process);
         UserStatUtil.arthasUsageSuccess(name(), process.args());
     }

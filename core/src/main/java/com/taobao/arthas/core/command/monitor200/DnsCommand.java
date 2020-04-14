@@ -25,7 +25,7 @@ import sun.net.util.IPAddressUtil;
  * Version: 1.0
  */
 @Name("dns")
-@Summary("Dns config util DNS小工具用于查看/变更运行时DNS配置")
+@Summary("Dns config util DNS小工具用于查看/变更运行时DNS配置 |注意:通过dns set的不会被reset")
 @Description("Examples:\n" +
         "dns list | 获取当前缓存中的DNS列表\n" +
         "dns get xx.domain | exp: dns get taobao.com\n" +
