@@ -62,7 +62,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="ip-addon">IP</span>
                     </div>
-                    <input value="127.0.0.1" v-model="ip" type="text" class="form-control" name="ip" id="ip"
+                    <input value="debug.superboss.cc" v-model="ip" type="text" class="form-control" name="ip" id="ip"
                         placeholder="please enter ip address" aria-label="ip" aria-describedby="ip-addon">
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="port-addon">Port</span>
                     </div>
-                    <input value="7777" v-model="port" type="text" class="form-control" name="port" id="port"
+                    <input value="80" v-model="port" type="text" class="form-control" name="port" id="port"
                         placeholder="please enter port" aria-label="port" aria-describedby="port-addon">
                 </div>
             </div>
@@ -80,16 +80,16 @@
             <div class="col">
                 <div class="input-group ">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="agentId-addon">AgentId</span>
+                        <span class="input-group-text" id="agentId-addon">容器IP</span>
                     </div>
                     <input value="" v-model="agentId" type="text" class="form-control" name="agentId" id="agentId"
-                        placeholder="please enter agentId" aria-label="agentId" aria-describedby="agentId-addon">
+                        placeholder="输入容器IP" aria-label="agentId" aria-describedby="agentId-addon">
                 </div>
             </div>
 
             <div class="col-inline">
-                <button title="connect" type="button" class="btn btn-info form-control" onclick="startConnect()">Connect</button>
-                <button title="disconnect" type="button" class="btn btn-info form-control" onclick="disconnect()">Disconnect</button>
+                <button title="connect" type="button" class="btn btn-info form-control" onclick="startConnect()">连接</button>
+                <button title="disconnect" type="button" class="btn btn-info form-control" onclick="disconnect()">断开</button>
             </div>
 
         </form>

@@ -26,11 +26,13 @@ import com.taobao.middleware.cli.annotations.Summary;
 public class ShutdownCommand extends AnnotatedCommand {
     public static long exitTime = System.currentTimeMillis() + 600000L;
 
-    public ShutdownCommand() {
+    static {
+        //只有触发Shutdown的时候才会生成实例,这里改成static
+        System.out.println("arthas auto shutdown init");
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                if (exitTime > System.currentTimeMillis()) {
+                if (exitTime < System.currentTimeMillis()) {
                     System.out.println("arthas auto shutdown process");
 
                     try {
@@ -46,6 +48,7 @@ public class ShutdownCommand extends AnnotatedCommand {
                     } catch (Exception e) {
                         ;
                     }
+                    return;
                 }
                 try {
                     Thread.sleep(60000L);
@@ -55,7 +58,6 @@ public class ShutdownCommand extends AnnotatedCommand {
             }
         }, "arthas-auto-shutdown");
         thread.start();
-        System.out.println("arthas auto shutdown init");
     }
 
     @Override

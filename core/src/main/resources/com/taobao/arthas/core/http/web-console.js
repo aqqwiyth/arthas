@@ -99,7 +99,7 @@ function startConnect (silent) {
         return;
     }
     if (ws != null) {
-        alert('Already connected');
+        alert('不支持连接一个之后连其他的,请刷新重连下!');
         return;
     }
     // init webSocket

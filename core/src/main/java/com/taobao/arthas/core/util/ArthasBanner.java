@@ -1,5 +1,10 @@
 package com.taobao.arthas.core.util;
 
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.alibaba.arthas.deps.org.slf4j.Logger;
 import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
 import com.taobao.arthas.common.PidUtils;
@@ -8,11 +13,6 @@ import com.taobao.text.Color;
 import com.taobao.text.Decoration;
 import com.taobao.text.ui.TableElement;
 import com.taobao.text.util.RenderUtil;
-
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import static com.taobao.text.ui.Element.label;
 
@@ -103,15 +103,17 @@ public class ArthasBanner {
     public static String welcome(Map<String, String> infos) {
         logger.info("arthas version: " + version());
         TableElement table = new TableElement().rightCellPadding(1)
-                        .row("wiki", wiki())
-                        .row("tutorials", tutorials())
-                        .row("version", version())
-                        .row("pid", PidUtils.currentPid())
-                        .row("time", DateUtils.getCurrentDate());
+                .row("wiki", wiki())
+                .row("tutorials", tutorials())
+                .row("version", version())
+                .row("pid", PidUtils.currentPid())
+                .row("time", DateUtils.getCurrentDate());
         for (Entry<String, String> entry : infos.entrySet()) {
             table.row(entry.getKey(), entry.getValue());
         }
-
-        return logo() + "\n" + RenderUtil.render(table);
+        TableElement tablexxx = new TableElement().rightCellPadding(1)
+                .row("光云特别提醒", "线上操作谨慎谨慎再谨慎! 用的好就是核武器! 用的不好也是核武器! ").style(Decoration.bold.fg(Color.red))
+                .row("注意", " 不使用的时候不要直接关闭页面,请先stop/shutdown再关闭  ").style(Decoration.bold.fg(Color.red));
+        return logo() + "\n" + RenderUtil.render(table) + RenderUtil.render(tablexxx);
     }
 }

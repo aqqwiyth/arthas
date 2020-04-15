@@ -4,26 +4,30 @@ var xterm;
 $(function () {
     var url = window.location.href;
     var ip = getUrlParam('ip');
-    var port = getUrlParam('port');
-    var agentId = getUrlParam('agentId');
+    //var port = getUrlParam('port');
+    //var agentId = getUrlParam('agentId');
 
-    if (ip != '' && ip != null) {
-        $('#ip').val(ip);
-    } else {
-        $('#ip').val(window.location.hostname);
-    }
-    if (port != '' && port != null) {
-        $('#port').val(port);
-    }
-    if (agentId != '' && agentId != null) {
-        $('#agentId').val(agentId);
-    }
+    //if (ip != '' && ip != null) {
+    //    $('#ip').val(ip);
+    //} else {
+    //    $('#ip').val(window.location.hostname);
+    //}
+    //if (port != '' && port != null) {
+    //    $('#port').val(port);
+    //}
+    //if (agentId != '' && agentId != null) {
+    //    $('#agentId').val(agentId);
+    //}
+
+    $('#ip').val("debug.superboss.cc");
+    $('#port').val("80");
+    $('#agentId').val(getUrlParam('ip'));
 
     startConnect(true);
 });
 
 /** get params in url **/
-function getUrlParam (name, url) {
+function getUrlParam(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
@@ -33,7 +37,7 @@ function getUrlParam (name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function getCharSize () {
+function getCharSize() {
     var tempDiv = $('<div />').attr({'role': 'listitem'});
     var tempSpan = $('<div />').html('qwertyuiopasdfghjklzxcvbnm');
     tempDiv.append(tempSpan);
@@ -48,7 +52,7 @@ function getCharSize () {
     return size;
 }
 
-function getWindowSize () {
+function getWindowSize() {
     var e = window;
     var a = 'inner';
     if (!('innerWidth' in window )) {
@@ -63,7 +67,7 @@ function getWindowSize () {
     };
 }
 
-function getTerminalSize () {
+function getTerminalSize() {
     var charSize = getCharSize();
     var windowSize = getWindowSize();
     console.log('charsize');
@@ -77,13 +81,13 @@ function getTerminalSize () {
 }
 
 /** init websocket **/
-function initWs (ip, port, agentId) {
+function initWs(ip, port, agentId) {
     var path = 'ws://' + ip + ':' + port + '/ws?method=connectArthas&id=' + agentId;
     ws = new WebSocket(path);
 }
 
 /** init xterm **/
-function initXterm (cols, rows) {
+function initXterm(cols, rows) {
     xterm = new Terminal({
         cols: cols,
         rows: rows,
@@ -94,7 +98,7 @@ function initXterm (cols, rows) {
 }
 
 /** begin connect **/
-function startConnect (silent) {
+function startConnect(silent) {
     var ip = $('#ip').val();
     var port = $('#port').val();
     var agentId = $('#agentId').val();
@@ -110,14 +114,14 @@ function startConnect (silent) {
         return;
     }
     if (ws != null) {
-        alert('Already connected');
+        alert('重复的ws对象,请先点右上角[断开连接]再连接');
         return;
     }
     // init webSocket
     initWs(ip, port, agentId);
     ws.onerror = function () {
         ws = null;
-        !silent && alert('Connect error');
+        !silent && alert('连接失败,请确认是否在发布系统开启');
     };
     ws.onclose = function (message) {
         if (message.code === 2000) {
@@ -151,8 +155,9 @@ function startConnect (silent) {
     }
 }
 
-function disconnect () {
+function disconnect() {
     try {
+        //ws.send(JSON.stringify({action: 'read', data: "stop\n"}))
         ws.onmessage = null;
         ws.onclose = null;
         ws = null;
@@ -165,12 +170,12 @@ function disconnect () {
 }
 
 /** full screen show **/
-function xtermFullScreen () {
+function xtermFullScreen() {
     var ele = document.getElementById('terminal-card');
     requestFullScreen(ele);
 }
 
-function requestFullScreen (element) {
+function requestFullScreen(element) {
     var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
     if (requestMethod) {
         requestMethod.call(element);
