@@ -1,17 +1,18 @@
 package com.taobao.arthas.core.command.klass100;
 
+import com.alibaba.arthas.deps.org.slf4j.Logger;
+import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
+import com.taobao.arthas.core.util.FileUtils;
+import com.taobao.arthas.core.util.LogUtil;
+
 import java.io.File;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.alibaba.arthas.deps.org.slf4j.Logger;
-import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
-import com.taobao.arthas.core.util.FileUtils;
-import com.taobao.arthas.core.util.LogUtil;
 
 /**
  * @author beiwei30 on 25/11/2016.
@@ -23,7 +24,7 @@ class ClassDumpTransformer implements ClassFileTransformer {
     private Set<Class<?>> classesToEnhance;
     private Map<Class<?>, File> dumpResult;
     private File arthasLogHome;
-
+    private String suffix = ".class.tmp";
     private File directory;
 
     public ClassDumpTransformer(Set<Class<?>> classesToEnhance) {
@@ -45,6 +46,13 @@ class ClassDumpTransformer implements ClassFileTransformer {
             dumpClassIfNecessary(classBeingRedefined, classfileBuffer);
         }
         return null;
+    }
+
+    public void setSuffix(String suffix) {
+        if (suffix == null) {
+            return;
+        }
+        this.suffix = suffix;
     }
 
     public Map<Class<?>, File> getDumpResult() {
@@ -71,9 +79,9 @@ class ClassDumpTransformer implements ClassFileTransformer {
         String fileName;
         if (classLoader != null) {
             fileName = classLoader.getClass().getName() + "-" + Integer.toHexString(classLoader.hashCode()) +
-                    File.separator + className.replace(".", File.separator) + ".class.xxx";
+                    File.separator + className.replace(".", File.separator) + suffix;
         } else {
-            fileName = className.replace(".", File.separator) + ".class.xxx";
+            fileName = className.replace(".", File.separator) + suffix;
         }
 
         File dumpClassFile = new File(dumpDir, fileName);
