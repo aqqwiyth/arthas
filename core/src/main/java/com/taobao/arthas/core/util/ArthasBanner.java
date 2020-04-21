@@ -113,7 +113,8 @@ public class ArthasBanner {
         }
         TableElement tablexxx = new TableElement().rightCellPadding(1)
                 .row("光云特别提醒", "线上操作谨慎谨慎再谨慎! 用的好就是核武器! 用的不好也是核武器! ").style(Decoration.bold.fg(Color.red))
-                .row("注意", " 不使用的时候不要直接关闭页面,请先stop/shutdown再关闭  ").style(Decoration.bold.fg(Color.red));
+                .row("注意", " 不使用的时候不要直接关闭页面,请先stop/shutdown再关闭  ").style(Decoration.bold.fg(Color.red))
+                .row("arthas日志路径", " 项目平级的logs/arthas里. 有时候命令没反应一般是报错了!  ").style(Decoration.bold.fg(Color.red));
         return logo() + "\n" + RenderUtil.render(table) + RenderUtil.render(tablexxx);
     }
 }

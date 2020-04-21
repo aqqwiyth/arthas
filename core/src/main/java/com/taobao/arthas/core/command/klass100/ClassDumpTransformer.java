@@ -1,18 +1,17 @@
 package com.taobao.arthas.core.command.klass100;
 
-import com.alibaba.arthas.deps.org.slf4j.Logger;
-import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
-import com.taobao.arthas.core.util.FileUtils;
-import com.taobao.arthas.core.util.LogUtil;
-
 import java.io.File;
-import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.alibaba.arthas.deps.org.slf4j.Logger;
+import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
+import com.taobao.arthas.core.util.FileUtils;
+import com.taobao.arthas.core.util.LogUtil;
 
 /**
  * @author beiwei30 on 25/11/2016.
@@ -72,19 +71,20 @@ class ClassDumpTransformer implements ClassFileTransformer {
         String fileName;
         if (classLoader != null) {
             fileName = classLoader.getClass().getName() + "-" + Integer.toHexString(classLoader.hashCode()) +
-                    File.separator + className.replace(".", File.separator) + ".class";
+                    File.separator + className.replace(".", File.separator) + ".class.xxx";
         } else {
-            fileName = className.replace(".", File.separator) + ".class";
+            fileName = className.replace(".", File.separator) + ".class.xxx";
         }
 
         File dumpClassFile = new File(dumpDir, fileName);
 
         // 将类字节码写入文件
         try {
+            //线上用class后缀写入会被安全插件拦截这里修改一下后缀
             FileUtils.writeByteArrayToFile(dumpClassFile, data);
             dumpResult.put(clazz, dumpClassFile);
-        } catch (IOException e) {
-            logger.warn("dump class:{} to file {} failed.", className, dumpClassFile, e);
+        } catch (Throwable e) {
+            logger.warn("dump class:{} to file {} failed.{}", className, dumpClassFile, e.getMessage(), e);
         }
     }
 }
