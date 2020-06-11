@@ -1,18 +1,19 @@
 package com.taobao.arthas.core.util;
 
-import com.taobao.arthas.core.GlobalOptions;
-import com.taobao.arthas.core.util.matcher.Matcher;
-import com.taobao.arthas.core.util.matcher.RegexMatcher;
-import com.taobao.arthas.core.util.matcher.WildcardMatcher;
-
 import java.lang.instrument.Instrumentation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.taobao.arthas.core.GlobalOptions;
+import com.taobao.arthas.core.util.matcher.Matcher;
+import com.taobao.arthas.core.util.matcher.RegexMatcher;
+import com.taobao.arthas.core.util.matcher.WildcardMatcher;
+
 /**
  * 类搜索工具
  * Created by vlinux on 15/5/17.
+ *
  * @author diecui1202 on 2017/09/07.
  */
 public class SearchUtils {
@@ -31,6 +32,12 @@ public class SearchUtils {
         }
         final Set<Class<?>> matches = new HashSet<Class<?>>();
         for (Class<?> clazz : inst.getAllLoadedClasses()) {
+            //拒绝某些包通过arthas修改
+            if (clazz.getName().startsWith("com.raycloud.agent") ||
+                    clazz.getName().startsWith("com.raycloud.safe") ||
+                    clazz.getName().startsWith("com.taobao.arthas")) {
+                continue;
+            }
             if (classNameMatcher.matching(clazz.getName())) {
                 matches.add(clazz);
             }
@@ -108,6 +115,9 @@ public class SearchUtils {
         final Set<Class<?>> matches = new HashSet<Class<?>>();
         for (Class<?> clazz : inst.getAllLoadedClasses()) {
             for (Class<?> superClass : classSet) {
+                if (clazz.getName().startsWith("com.raycloud.agent") || clazz.getName().startsWith("com.raycloud.safe")) {
+                    continue;
+                }
                 if (superClass.isAssignableFrom(clazz)) {
                     matches.add(clazz);
                     break;
