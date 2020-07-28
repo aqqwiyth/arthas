@@ -9,7 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class ActuatorSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().requestMatchers(EndpointRequest.toAnyEndpoint()).authenticated().anyRequest()
-                .permitAll().and().formLogin();
+        httpSecurity.antMatcher("/file/**").csrf().disable()
+                .authorizeRequests()
+                .requestMatchers(EndpointRequest.toAnyEndpoint())
+                .authenticated().anyRequest().permitAll()
+                .and().formLogin();
+
     }
 }

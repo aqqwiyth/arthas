@@ -102,6 +102,8 @@ function startConnect(silent) {
     var ip = $('#ip').val();
     var port = $('#port').val();
     var agentId = $('#agentId').val();
+    $("#uploadIp").val(agentId);
+
     if (ip == '' || port == '') {
         alert('Ip or port can not be empty');
         return;
