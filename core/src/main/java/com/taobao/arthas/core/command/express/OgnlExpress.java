@@ -2,7 +2,6 @@ package com.taobao.arthas.core.command.express;
 
 import com.alibaba.arthas.deps.org.slf4j.Logger;
 import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
-
 import ognl.ClassResolver;
 import ognl.DefaultMemberAccess;
 import ognl.MemberAccess;
@@ -45,6 +44,17 @@ public class OgnlExpress implements Express {
     public boolean is(String express) throws ExpressException {
         final Object ret = get(express);
         return null != ret && ret instanceof Boolean && (Boolean) ret;
+    }
+
+    @Override
+    public boolean set(String express, Object obj) throws ExpressException {
+        try {
+            Ognl.setValue(express, context, bindObject, obj);
+        } catch (Exception e) {
+            logger.error("Error during evaluating the expression:", e);
+            throw new ExpressException(express, e);
+        }
+        return true;
     }
 
     @Override
