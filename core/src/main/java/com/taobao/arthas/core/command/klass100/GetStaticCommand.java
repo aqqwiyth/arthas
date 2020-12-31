@@ -48,12 +48,12 @@ public class GetStaticCommand extends AnnotatedCommand {
 
     private static final Logger logger = LoggerFactory.getLogger(GetStaticCommand.class);
 
-    private String classPattern;
-    private String fieldPattern;
-    private String express;
-    private String hashCode = null;
-    private boolean isRegEx = false;
-    private int expand = 1;
+    protected String classPattern;
+    protected String fieldPattern;
+    protected String express;
+    protected String hashCode = null;
+    protected boolean isRegEx = false;
+    protected int expand = 1;
 
     @Argument(argName = "class-pattern", index = 0)
     @Description("Class name pattern, use either '.' or '/' as separator")
@@ -155,7 +155,7 @@ public class GetStaticCommand extends AnnotatedCommand {
         }
     }
 
-    private void processMatches(CommandProcess process, Set<Class<?>> matchedClasses) {
+    protected void processMatches(CommandProcess process, Set<Class<?>> matchedClasses) {
         Element usage = new LabelElement("getstatic -c <hashcode> " + classPattern + " " + fieldPattern).style(
                 Decoration.bold.fg(Color.blue));
         process.write("\n Found more than one class for: " + classPattern + ", Please use " + RenderUtil.render(usage,
@@ -174,7 +174,7 @@ public class GetStaticCommand extends AnnotatedCommand {
         process.write(RenderUtil.render(table, process.width()) + "\n");
     }
 
-    private Matcher<String> fieldNameMatcher() {
+    protected Matcher<String> fieldNameMatcher() {
         return isRegEx ? new RegexMatcher(fieldPattern) : new WildcardMatcher(fieldPattern);
     }
 }
