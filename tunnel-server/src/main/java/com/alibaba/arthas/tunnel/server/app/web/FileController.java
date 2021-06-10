@@ -1,19 +1,23 @@
 package com.alibaba.arthas.tunnel.server.app.web;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 补充一个文件上传的接口提供class导入.再同步到目标容器.
@@ -30,7 +34,8 @@ public class FileController {
         Map<String, String> map = new HashMap<>();
         request.getFileMap().entrySet().forEach(entry -> {
             try {
-                long max = Long.valueOf(System.getProperty("max.file.size", "10"));
+                //默认文件大小
+                long max = Long.valueOf(System.getProperty("max.file.size", "100"));
                 if (entry.getValue().getBytes().length / 1024 > max) {
                     map.put(entry.getValue().getOriginalFilename(), entry.getValue().getBytes().length / 1024 + "K文件过大!");
                     return;
