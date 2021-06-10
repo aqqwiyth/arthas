@@ -12,6 +12,10 @@ Welcome to use [issue tracker](https://github.com/alibaba/arthas/issues) to give
 
 Welcome PR to further improve English [documentation](https://github.com/alibaba/arthas/tree/master/site/src/site/sphinx/en).
 
+## Online Tutorials
+
+Please refer to [README.MD at tutorials/katacoda](tutorials/katacoda/README.md#contribution-guide)
+
 ## Developer
 
 * Arthas runtime supports JDK6+
@@ -62,7 +66,7 @@ Tip: you can use `--versions` to list all available versions.
 
 
 
-## issue
+## Issue
 
 欢迎在issue里对arthas做反馈，分享使用技巧，排查问题的经历。
 
@@ -73,6 +77,10 @@ Tip: you can use `--versions` to list all available versions.
 用户文档在`site/src/site/sphinx`目录下，如果希望改进arthas用户文档，欢迎提交PR。
 
 英文文档在`site/src/site/sphinx/en`目录下，欢迎提交翻译PR。
+
+## 改进在线教程
+
+请参考[tutorials/katacoda下的说明](tutorials/katacoda/README_CN.md#贡献指南)
 
 ## 开发者相关
 
@@ -110,12 +118,22 @@ Tip: you can use `--versions` to list all available versions.
 * arthas是用sphinx来生成静态网站
 * 在`site/pom.xml`里配置了`sphinx-maven-plugin`
 * `sphinx-maven-plugin`通过下载`sphinx-binary/`来执行
-* sphinx配置的`recommonmark`插件有bug：https://github.com/rtfd/recommonmark/issues/93 ，因此另外打包了一个修复版本： https://github.com/hengyunabc/sphinx-binary/releases/tag/v0.4.0.1
+
+
 * 全量打包时，需要配置下面的参数：
 
     ```
-    ./mvnw clean package -DskipTests -P full -Dsphinx.binUrl=https://github.com/hengyunabc/sphinx-binary/releases/download/v0.4.0.1/sphinx.osx-x86_64
+    ./mvnw clean package -DskipTests -P full
     ```
+#### 当 sphinx-maven-plugin 下载出错时，可以用下面的方式
+
+到 https://github.com/trustin/sphinx-binary/releases 下载对应版本的二进制文件，并在本地加上可执行权限。例如：
+
+```
+wget https://github.com/hengyunabc/sphinx-binary/releases/download/v0.4.0.1/sphinx.osx-x86_64 -o /tmp/sphinx.osx-x86_64
+chmod +x /tmp/sphinx.osx-x86_64
+./mvnw clean package -DskipTests -P full -Dsphinx.binUrl=file:/tmp/sphinx.osx-x86_64
+```
 
 ### Release Steps
 
@@ -123,15 +141,18 @@ Tip: you can use `--versions` to list all available versions.
 
 * 修改`as.sh`里的版本，最后修改日期， `Bootstrap.java`里的版本，Dockerfile里的版本
 * 修改本地的maven settings.xml
-* mvn release:prepare -Darguments="-DskipTests -P full"
-* mvn release:perform -Darguments="-DskipTests -P full"
+* mvn clean deploy -DskipTests -P full -P release
 
-    如果在下载 https://github.com/trustin/sphinx-binary/releases/download/v0.7.1/sphinx.osx-x86_64 时有问题，可以先下载到本地，然后用 `file:/tmp/sphinx.osx-x86_64` 的方式指定
+    如果在下载 sphinx-binary 出错，参考上面的 全量打包 的说明。
 
 * 到 https://oss.sonatype.org/ 上，“Staging Repositories”然后close掉自己的，再release
 * 发布后，可以到这里查看是否同步到仓库里了： https://repo1.maven.org/maven2/com/taobao/arthas/arthas-packaging/
 * 发布完maven仓库之后，需要到阿里云的仓库里检查是否同步，有可能有延时
-* 需要更新 gh-pages 分支下面的 arthas-boot.jar/arthas-demo.jar/as.sh ，下载 doc.zip，解压覆盖掉文档的更新
+
+    比如下载地址： https://maven.aliyun.com/repository/public/com/taobao/arthas/arthas-packaging/3.x.x/arthas-packaging-3.x.x-bin.zip
+
+* 打上tag，push tag到仓库上
+* 需要更新 gh-pages 分支下面的 arthas-boot.jar/math-game.jar/as.sh ，下载 doc.zip，解压覆盖掉文档的更新
 * 需要更新docker镜像，push新的tag：https://hub.docker.com/r/hengyunabc/arthas/tags?page=1&ordering=last_updated
 
     以 3.1.0 版本为例：

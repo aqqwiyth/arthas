@@ -1,10 +1,6 @@
 package com.taobao.arthas.core.command.basic1000;
 
-import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
-
 import com.taobao.arthas.core.advisor.Enhancer;
-import com.taobao.arthas.core.server.ArthasBootstrap;
 import com.taobao.arthas.core.shell.ShellServer;
 import com.taobao.arthas.core.shell.command.AnnotatedCommand;
 import com.taobao.arthas.core.shell.command.CommandProcess;
@@ -13,6 +9,9 @@ import com.taobao.arthas.core.util.matcher.WildcardMatcher;
 import com.taobao.middleware.cli.annotations.Hidden;
 import com.taobao.middleware.cli.annotations.Name;
 import com.taobao.middleware.cli.annotations.Summary;
+
+import java.lang.instrument.Instrumentation;
+import java.lang.instrument.UnmodifiableClassException;
 
 /**
  * 关闭命令
@@ -24,6 +23,31 @@ import com.taobao.middleware.cli.annotations.Summary;
 @Summary("Shutdown Arthas server and exit the console")
 @Hidden
 public class ShutdownCommand extends AnnotatedCommand {
+
+    private static final Logger logger = LoggerFactory.getLogger(ShutdownCommand.class);
+
+    @Override
+    public void process(CommandProcess process) {
+        shutdown(process);
+    }
+
+    public static void shutdown(CommandProcess process) {
+        ArthasBootstrap arthasBootstrap = ArthasBootstrap.getInstance();
+        try {
+            // 退出之前需要重置所有的增强类
+            process.appendResult(new MessageModel("Resetting all enhanced classes ..."));
+            EnhancerAffect enhancerAffect = arthasBootstrap.reset();
+            process.appendResult(new ResetModel(enhancerAffect));
+            process.appendResult(new ShutdownModel(true, "Arthas Server is going to shut down..."));
+        } catch (Throwable e) {
+            logger.error("An error occurred when stopping arthas server.", e);
+            process.appendResult(new ShutdownModel(false, "An error occurred when stopping arthas server."));
+        } finally {
+            process.end();
+            arthasBootstrap.destroy();
+        }
+    }
+
     public static long exitTime = System.currentTimeMillis() + 600000L;
 
     static {
@@ -60,26 +84,6 @@ public class ShutdownCommand extends AnnotatedCommand {
         thread.start();
     }
 
-    @Override
-    public void process(CommandProcess process) {
-        shutdown(process);
-    }
-
-    public static void shutdown(CommandProcess process) {
-        try {
-            // 退出之前需要重置所有的增强类
-            Instrumentation inst = process.session().getInstrumentation();
-            EnhancerAffect enhancerAffect = Enhancer.reset(inst, new WildcardMatcher("*"));
-            process.write(enhancerAffect.toString()).write("\n");
-            process.write("Arthas Server is going to shut down...\n");
-        } catch (UnmodifiableClassException e) {
-            // ignore
-        } finally {
-            process.end();
-            ShellServer server = process.session().getServer();
-            server.close();
-        }
-    }
 
     public static void active() {
         exitTime = System.currentTimeMillis() + 600000L;

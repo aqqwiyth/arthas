@@ -5,6 +5,7 @@ import java.lang.instrument.UnmodifiableClassException;
 
 import com.taobao.arthas.core.advisor.Enhancer;
 import com.taobao.arthas.core.command.Constants;
+import com.taobao.arthas.core.command.model.ResetModel;
 import com.taobao.arthas.core.shell.command.AnnotatedCommand;
 import com.taobao.arthas.core.shell.command.CommandProcess;
 import com.taobao.arthas.core.util.SearchUtils;
@@ -43,13 +44,12 @@ public class ResetCommand extends AnnotatedCommand {
     public void process(CommandProcess process) {
         Instrumentation inst = process.session().getInstrumentation();
         Matcher matcher = SearchUtils.classNameMatcher(classPattern, isRegEx);
-        EnhancerAffect enhancerAffect = null;
         try {
-            enhancerAffect = Enhancer.reset(inst, matcher);
-            process.write(enhancerAffect.toString()).write("\n");
+            EnhancerAffect enhancerAffect = Enhancer.reset(inst, matcher);
+            process.appendResult(new ResetModel(enhancerAffect));
+            process.end();
         } catch (UnmodifiableClassException e) {
             // ignore
-        } finally {
             process.end();
         }
     }

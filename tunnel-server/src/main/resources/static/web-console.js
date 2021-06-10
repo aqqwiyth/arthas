@@ -81,9 +81,13 @@ function getTerminalSize() {
 }
 
 /** init websocket **/
-function initWs(ip, port, agentId) {
-    var path = 'ws://' + ip + ':' + port + '/ws?method=connectArthas&id=' + agentId;
-    ws = new WebSocket(path);
+function initWs (ip, port, path, agentId, targetServer) {
+    var protocol= location.protocol === 'https:'  ? 'wss://' : 'ws://';
+    var uri = protocol + ip + ':' + port + '/' + encodeURIComponent(path) + '?method=connectArthas&id=' + agentId;
+    if (targetServer != null) {
+        uri = uri + '&targetServer=' + encodeURIComponent(targetServer);
+    }
+    ws = new WebSocket(uri);
 }
 
 /** init xterm **/
@@ -160,6 +164,7 @@ function startConnect(silent) {
 function disconnect() {
     try {
         //ws.send(JSON.stringify({action: 'read', data: "stop\n"}))
+        ws.close();
         ws.onmessage = null;
         ws.onclose = null;
         ws = null;
