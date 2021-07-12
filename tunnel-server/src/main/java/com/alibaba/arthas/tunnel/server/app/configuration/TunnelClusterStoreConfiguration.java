@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -26,6 +27,7 @@ import com.alibaba.arthas.tunnel.server.cluster.TunnelClusterStore;
  */
 @Configuration
 @AutoConfigureAfter(value = { RedisAutoConfiguration.class, CacheAutoConfiguration.class })
+@EnableCaching
 @Import(RedisTunnelClusterStoreConfiguration.class)
 public class TunnelClusterStoreConfiguration {
 
