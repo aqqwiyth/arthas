@@ -35,7 +35,7 @@ public class FileController {
         request.getFileMap().entrySet().forEach(entry -> {
             try {
                 //默认文件大小
-                long max = Long.valueOf(System.getProperty("max.file.size", "100"));
+                long max = Long.valueOf(System.getProperty("max.file.size", "1000"));
                 if (entry.getValue().getBytes().length / 1024 > max) {
                     map.put(entry.getValue().getOriginalFilename(), entry.getValue().getBytes().length / 1024 + "K文件过大!");
                     return;

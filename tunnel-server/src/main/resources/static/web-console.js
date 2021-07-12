@@ -2,26 +2,11 @@ var ws;
 var xterm;
 
 $(function () {
-    var url = window.location.href;
-    var ip = getUrlParam('ip');
-    //var port = getUrlParam('port');
-    //var agentId = getUrlParam('agentId');
 
-    //if (ip != '' && ip != null) {
-    //    $('#ip').val(ip);
-    //} else {
-    //    $('#ip').val(window.location.hostname);
-    //}
-    //if (port != '' && port != null) {
-    //    $('#port').val(port);
-    //}
-    //if (agentId != '' && agentId != null) {
-    //    $('#agentId').val(agentId);
-    //}
-
-    $('#ip').val("debug.superboss.cc");
+    var agentId = getUrlParam('ip');
+    $('#ip').val(location.hostname);
     $('#port').val("80");
-    $('#agentId').val(getUrlParam('ip'));
+    $('#agentId').val(agentId);
 
     startConnect(true);
 });
@@ -81,8 +66,11 @@ function getTerminalSize() {
 }
 
 /** init websocket **/
-function initWs (ip, port, path, agentId, targetServer) {
-    var protocol= location.protocol === 'https:'  ? 'wss://' : 'ws://';
+function initWs(ip, port, agentId, targetServer) {
+    var path = getUrlParam('path');
+    path = path || 'ws';
+
+    var protocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
     var uri = protocol + ip + ':' + port + '/' + encodeURIComponent(path) + '?method=connectArthas&id=' + agentId;
     if (targetServer != null) {
         uri = uri + '&targetServer=' + encodeURIComponent(targetServer);
